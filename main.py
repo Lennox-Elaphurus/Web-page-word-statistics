@@ -49,7 +49,10 @@ while(1):
     html = response.read()
     # getText
     formattedData=[]
-    pattern = re.compile("\s+(?P<content>[a-zA-Z_]+)\s+", re.DOTALL)
+    #\s \s
+    # [a-zA-Z\s,.:]
+    # <p>+?(?P<content>.*)</p>+?
+    pattern = re.compile(r"\s(?P<content>[a-zA-Z]+)\s", re.DOTALL)
     contentMatch = re.findall(pattern, str(html))
     # print(contentMatch)
     contentMatch =str(contentMatch).split()
