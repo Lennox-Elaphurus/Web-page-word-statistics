@@ -1,7 +1,5 @@
 import re
 import urllib.request
-import signal                # for handling KeyboardInterrupts
-
 def save():
     global totalWordsCnt
     global uniqueWordsCnt
@@ -19,12 +17,6 @@ def save():
     recordFile.close()
     print("Record saved: "+"totalWordsCnt "+str(totalWordsCnt)+" uniqueWordsCnt "+str(uniqueWordsCnt))
 
-def handle_SIGINT(signal, frame) :
-    save()
-    print("Keyboard operation detected! Exit creeping.")
-
-
-signal.signal(signal.SIGINT, handle_SIGINT)
 # import record
 recordFile=open("record.txt",'r')
 wordList={}
@@ -38,8 +30,14 @@ else:
     totalWordsCnt = int(0)
     uniqueWordsCnt =int(0)
 
+i=4
+while i<=len(records)-2 :
+    wordList[records[i]]=int(records[i+1])
+    i=i+2
+
 print("file imported: totalWordsCnt = "+str(totalWordsCnt)+" uniqueWordsCnt = "+str(uniqueWordsCnt))
 # finish import record
+
 creepingCnt=0
 while(1):
     if creepingCnt%10==0:
@@ -57,11 +55,6 @@ while(1):
     # print(contentMatch)
     contentMatch =str(contentMatch).split()
     # finish getting words
-
-    i=4
-    while i<=len(records)-2 :
-        wordList[records[i]]=int(records[i+1])
-        i=i+2
 
     for content in contentMatch:
         if content in wordList.keys() and content is not "totalWords":
