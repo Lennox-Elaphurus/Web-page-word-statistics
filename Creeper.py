@@ -1,5 +1,7 @@
 import re
 import urllib.request
+import time
+import random
 def save():
     global totalWordsCnt
     global uniqueWordsCnt
@@ -40,9 +42,7 @@ print("file imported: totalWordsCnt = "+str(totalWordsCnt)+" uniqueWordsCnt = "+
 
 creepingCnt=0
 while(1):
-    if creepingCnt%10==0:
-        print("Creeping times: "+str(creepingCnt))
-        save()
+
     response = urllib.request.urlopen('https://en.wikibooks.org/wiki/Special:Random')
     html = response.read()
     # getText
@@ -65,6 +65,12 @@ while(1):
         totalWordsCnt = totalWordsCnt + 1
     # finish counting
     creepingCnt=creepingCnt+1
+    # if creepingCnt%10==0:
+    print("Creeping times: " + str(creepingCnt))
+    save()
+    rest=random.randrange(30, 600)
+    print("Sleeping: "+str(rest)+" s")
+    time.sleep(rest)
 
 save()
 # fp   = open("text.html", 'wb')
