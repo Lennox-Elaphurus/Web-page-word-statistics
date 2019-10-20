@@ -9,14 +9,14 @@ def save():
     global wordList
     recordFile=open("record.txt",'w')
     recordFile.write("totalCreepingCnt "+str(totalCreepingCnt)+" totalWordsCnt "+str(totalWordsCnt)+" uniqueWordsCnt "+str(uniqueWordsCnt))
-    for key in wordList:
-        word=key
+    for item in sorted(wordList.items(),key=lambda x:x[1],reverse=True):
+        word=item[0]
         word=word.replace("'","")
         word =word.replace(",","")
         word = word.replace("[", "")
         word = word.replace("]", "")
         # print(word)
-        recordFile.write("\n"+word+" "+str(wordList[key]))
+        recordFile.write("\n"+word+" "+str(item[1]))
     recordFile.close()
     print("Record saved: "+"totalCreepingCnt "+str(totalCreepingCnt)+" totalWordsCnt "+str(totalWordsCnt)+" uniqueWordsCnt "+str(uniqueWordsCnt))
 
@@ -34,6 +34,7 @@ else:
     totalWordsCnt = int(0)
     uniqueWordsCnt =int(0)
     totalCreepingCnt=int(0)
+    wordList={}
 
 i=6
 while i<=len(records)-2 :
@@ -47,8 +48,15 @@ creepingCnt=0
 while True:
     # https://en.wikibooks.org/wiki/Special:Random
     # https://en.wikibooks.org/api/rest_v1/page/random/summary
-    response = urllib.request.urlopen('https://en.wikibooks.org/api/rest_v1/page/random/html')
-    html = response.read()
+    try:
+        response = urllib.request.urlopen('https://en.wikibooks.org/api/rest_v1/page/random/html')
+    except BaseException:
+        rest=random.randrange(30, 600)
+        print("Sleeping: "+str(rest)+" s")
+        time.sleep(rest)
+        continue
+    else:
+        html = response.read()
     # getText
     formattedData=[]
     #\s \s
@@ -56,14 +64,14 @@ while True:
     # <p>+?(?P<content>.*)</p>+?
     # r"\s(?P<content>[a-zA-Z-]+)\s"
     r"<(^[/]*)>+?(?P<content>)<(/.*)>+?"
-    pattern = re.compile(r"[> '(](?P<content>[a-zA-Z-]+)[ ',.?!)<]", re.DOTALL)
+    pattern = re.compile(r"[> '(](?P<content>[a-zA-Z-']+)[ ',.?!)<]", re.DOTALL)
     contentMatch = re.findall(pattern, str(html))
-    print(contentMatch)
+    # print(contentMatch)
     contentMatch =str(contentMatch).split()
     # finish getting words
 
     for content in contentMatch:
-        if content in wordList.keys() and content is not "totalWords":
+        if content in wordList.keys():
             wordList[content]=wordList[content]+1
         else:
             wordList[content]=1
@@ -73,14 +81,19 @@ while True:
     creepingCnt=creepingCnt+1
     if creepingCnt%10==0:
         totalCreepingCnt=totalCreepingCnt+10
-        print("Creeping times: " + str(creepingCnt))
+        print("Creeping times: " + str(creepingCnt)+"\nSaving record...")
         save()
+        print("")
+    else:
+        print("Creeping times: " + str(creepingCnt)+ " totalWordsCnt = " + str(
+            totalWordsCnt) + " uniqueWordsCnt = " + str(uniqueWordsCnt))
+
     # rest=random.randrange(30, 600)
     # print("Sleeping: "+str(rest)+" s")
     # time.sleep(rest)
-    fp   = open("text.html", 'wb')
-    fp.write(html)
-    fp.close()
+    # fp   = open("text.html", 'wb')
+    # fp.write(html)
+    # fp.close()
 
 save()
 # fp   = open("text.html", 'wb')
