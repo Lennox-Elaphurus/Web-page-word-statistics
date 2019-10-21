@@ -12,7 +12,7 @@ for i in range(int(fileNumber)):
         header.records=header.recordFile.read()
         header.recordFile.close()
     header.records=header.records.split()
-    print(header.records)
+    # print(header.records)
     realUniqueWordsCnt = int((len(header.records) - 8) / 2)
     if realUniqueWordsCnt == -4:
         realUniqueWordsCnt = 0
@@ -26,6 +26,7 @@ for i in range(int(fileNumber)):
     else:
         print("Error: Unique words header.records is corrupted.")
         print("Number of unique words should be " + str(header.uniqueWordsCnt) + " instead of " + str(realUniqueWordsCnt) + " .")
+        time.sleep(60)
         exit(-1)
 
     i = 6
