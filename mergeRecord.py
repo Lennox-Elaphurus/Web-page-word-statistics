@@ -1,4 +1,5 @@
 import header
+import time
 
 # import header.record
 fileNumber=input("Please the number of files to merge:")

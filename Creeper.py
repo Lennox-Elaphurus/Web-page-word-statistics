@@ -1,7 +1,5 @@
 import re
-import urllib.request
 import requests
-import urllib.error
 import time
 import random
 import header
@@ -12,7 +10,7 @@ try:
         # https://en.wikibooks.org/api/rest_v1/page/random/summary
         try:
             response = requests.get('https://en.wikibooks.org/api/rest_v1/page/random/html').text
-        except urllib.error.HTTPError:
+        except requests.HTTPError:
             print("Detected an HTTP Error.")
             rest=random.randrange(30, 60)
             print("Sleeping: "+str(rest)+" s")
@@ -47,9 +45,11 @@ try:
         # finish getting words
 
         for content in contentMatch:
+            content=content.strip("'")
+            content = content.strip("-")
             if content in header.wordList.keys():
                 header.wordList[content]=header.wordList[content]+1
-            elif len(content)>0 and content[0]!="-":
+            elif len(content)>0 and content[0]!="-" and content[len(content)-1]!="-":
                 try:
                     print(header.wordList[content])
                     print("Error in wordList.")
@@ -67,9 +67,9 @@ try:
             header.save()
             print("")
 
-        fp   = open("text.html", 'w',encoding="utf-8")
-        fp.write(html)
-        fp.close()
+        # fp   = open("text.html", 'w',encoding="utf-8")
+        # fp.write(html)
+        # fp.close()
 except KeyboardInterrupt:
     print("Detected keyboard interrupt.")
     print("Waiting, press ENTER to exit.")

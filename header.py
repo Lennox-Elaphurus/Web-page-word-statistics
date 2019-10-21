@@ -16,7 +16,7 @@ def save():
         recordFile.write("\n"+word+" "+str(item[1]))
     recordFile.close()
 
-    if totalWordsCnt%1000==0:
+    if totalCreepingCnt%1000==0:
         check()
         currentTime=str(time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(time.time())))
         backupFileName="backups/record_" + currentTime + ".txt"
@@ -37,10 +37,10 @@ def check():
     global maxTimes
     global wordList
     global realUniqueWordsCnt
-    print("\nWordList:")
-    for item in sorted(wordList.items(), key = lambda kv:(kv[1], kv[0]),reverse=True):
-        print(str(item[0])+" "+str(item[1]),end=" , ")
-    print("")
+    # print("\nWordList:")
+    # for item in sorted(wordList.items(), key = lambda kv:(kv[1], kv[0]),reverse=True):
+    #     print(str(item[0])+" "+str(item[1]),end=" , ")
+    # print("")
     realUniqueWordsCnt=int(len(wordList))
     if len(records) == 0 and uniqueWordsCnt!=0 :
         tempMax = int(sorted(wordList.values(),reverse=True)[0])
