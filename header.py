@@ -49,13 +49,15 @@ def check():
             print("MaxTimes should be " + str(tempMax) + " instead of " + str(maxTimes) + " .")
             time.sleep(60)
             exit(-1)
+        else:
+            print("Max times of the first word is examined.")
     elif len(records)>0 and maxTimes != int(records[9]):
         print("First time import error: Record is corrupted.")
         print("MaxTimes should be " + str(maxTimes) + " instead of " + str(records[9]) + " .")
         time.sleep(60)
         exit(-1)
     else:
-        print("Max times of the first word is examined.")
+        print("\nMax times of the first word is examined.")
 
     if realUniqueWordsCnt == uniqueWordsCnt:
         print("Unique words record is examined.")
