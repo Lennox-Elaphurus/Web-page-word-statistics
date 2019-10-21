@@ -61,8 +61,8 @@ try:
         # https://en.wikibooks.org/api/rest_v1/page/random/summary
         try:
             response = urllib.request.urlopen('https://en.wikibooks.org/api/rest_v1/page/random/html')
-        except BaseException:
-            print("Detected an error.")
+        except urllib.error.HTTPError:
+            print("Detected an HTTP Error.")
             rest=random.randrange(30, 600)
             print("Sleeping: "+str(rest)+" s")
             time.sleep(rest)
