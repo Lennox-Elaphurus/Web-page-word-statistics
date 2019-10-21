@@ -60,7 +60,7 @@ try:
             header.totalWordsCnt = header.totalWordsCnt + 1
         # finish counting
         header.creepingCnt=header.creepingCnt+1
-        print(str(time.strftime('%H:%M:%S', time.localtime(time.time())))+" Creeping times " + str(header.creepingCnt) + " :\tgot " + str(len(contentMatch)) + " words.")
+        print(str(time.strftime('%H:%M:%S', time.localtime(time.time())))+" Creeping times " + str(header.creepingCnt) + " : got " + str(len(contentMatch)) + " words.")
         if header.creepingCnt%10==0:
             header.totalCreepingCnt=header.totalCreepingCnt+10
             print("Saving record, please don't exit.")
