@@ -75,6 +75,7 @@ def crawling(NO):
                 save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt)
                 print("")
                 terminate=True
+                time.sleep(10)
 
             # fp   = open("text.html", 'w',encoding="utf-8")
             # fp.write(html)
@@ -95,9 +96,9 @@ def crawling(NO):
 
 if __name__=='__main__':
     print('Parent process %s.' % os.getpid())
-    p = Pool(4)
-    for i in range(4):
-        p.apply_async(crawling(i))
+    p = Pool(processes=10)
+    for i in range(10):
+        p.apply_async(crawling,args=(i,))
         # p.map(crawling(i))
     print('Waiting for all subprocesses done...')
     p.close()

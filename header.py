@@ -4,6 +4,7 @@ import os
 
 def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
     recordFileName="record_"+str(NO)+".txt"
+    processMessage="Process "+str(NO)+" : "
     recordFile=open(recordFileName,'w')
     maxTimes=int(sorted(wordList.values(),reverse=True)[0])
     # records=[]
@@ -28,9 +29,9 @@ def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
         backupFile.write(recordText)
         backupFile.close()
         recordFile.close()
-        print("Backup file "+backupFileName+" created.")
+        print(processMessage+"Backup file "+backupFileName+" created.")
 
-    print("Record saved: "+"totalCreepingCnt = "+str(totalCreepingCnt)+" totalWordsCnt = "+str(totalWordsCnt)+" uniqueWordsCnt = "+str(uniqueWordsCnt))
+    print(processMessage+"Record saved: "+"totalCreepingCnt = "+str(totalCreepingCnt)+" totalWordsCnt = "+str(totalWordsCnt)+" uniqueWordsCnt = "+str(uniqueWordsCnt))
 
 
 def check(records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes):
