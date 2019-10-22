@@ -1,15 +1,11 @@
 import time
 
 
-def save():
-    global totalWordsCnt
-    global uniqueWordsCnt
-    global totalCreepingCnt
-    global wordList
-    global maxTimes
-    recordFile=open("record.txt",'w')
+def save(wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt,recordFileName):
+    recordFile=open(recordFileName,'w')
     maxTimes=int(sorted(wordList.values(),reverse=True)[0])
-    check()
+    # records=[]
+    check([],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
     recordFile.write("totalCreepingCnt "+str(totalCreepingCnt)+" totalWordsCnt "+str(totalWordsCnt)+" uniqueWordsCnt "+str(uniqueWordsCnt)+" maxTimes "+str(maxTimes))
     for item in sorted(wordList.items(),key=lambda x:x[1],reverse=True):
         word=item[0]
@@ -17,7 +13,7 @@ def save():
     recordFile.close()
 
     if totalCreepingCnt%1000==0:
-        check()
+        check([],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
         currentTime=str(time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(time.time())))
         backupFileName="backups/record_" + currentTime + ".txt"
         backupFile=open(backupFileName,'w')
@@ -31,12 +27,7 @@ def save():
     print("Record saved: "+"totalCreepingCnt = "+str(totalCreepingCnt)+" totalWordsCnt = "+str(totalWordsCnt)+" uniqueWordsCnt = "+str(uniqueWordsCnt))
 
 
-def check():
-    global uniqueWordsCnt
-    global records
-    global maxTimes
-    global wordList
-    global realUniqueWordsCnt
+def check(records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes):
     # print("\nWordList:")
     # for item in sorted(wordList.items(), key = lambda kv:(kv[1], kv[0]),reverse=True):
     #     print(str(item[0])+" "+str(item[1]),end=" , ")
@@ -69,45 +60,53 @@ def check():
         exit(-1)
 
 
-# import record
-recordFile = open("record.txt", 'r')
-wordList = {}
-records = recordFile.read()
-recordFile.close()
-records = records.split()
-# print(records)
-realUniqueWordsCnt = int((len(records) - 8) / 2)
-if realUniqueWordsCnt == -4:
-    realUniqueWordsCnt = 0
-print("Importing unique words: " + str(realUniqueWordsCnt))
-if len(records) >= 8:
-    totalCreepingCnt = int(records[1])
-    totalWordsCnt = int(records[3])
-    uniqueWordsCnt = int(records[5])
-    maxTimes = int(records[7])
-else:
-    totalWordsCnt = int(0)
-    uniqueWordsCnt = int(0)
-    totalCreepingCnt = int(0)
-    maxTimes= int(0)
-
-i = 8
-print("Record:")
-wordList.clear()
-# importCnt=0
-while i <= len(records) - 2:
-    if records[i] not in wordList:
-        wordList[records[i]] = int(records[i + 1])
-        print(records[i] + " " + records[i + 1] , end=' , ')
-        # importCnt = importCnt + 1
+def importRecord(recordFileName):
+    # import record
+    try:
+        recordFile = open(recordFileName, 'r')
+    except IOError:
+        print("File not found: "+recordFileName)
+        time.sleep(10)
+        exit(-1)
+    wordList = {}
+    records = recordFile.read()
+    recordFile.close()
+    records = records.split()
+    # print(records)
+    realUniqueWordsCnt = int((len(records) - 8) / 2)
+    if realUniqueWordsCnt == -4:
+        realUniqueWordsCnt = 0
+    print("Importing unique words: " + str(realUniqueWordsCnt))
+    if len(records) >= 8:
+        totalCreepingCnt = int(records[1])
+        totalWordsCnt = int(records[3])
+        uniqueWordsCnt = int(records[5])
+        maxTimes = int(records[7])
     else:
-        print("\nError in wordList: '"+records[i]+"'")
-    i = i + 2
-# print("\nimportCnt = "+str(importCnt))
-check()
-print("file imported: totalCreepingCnt = " + str(totalCreepingCnt) + " totalWordsCnt = " + str(
-    totalWordsCnt) + " uniqueWordsCnt = " + str(uniqueWordsCnt))
-records.clear()
-# finish import record
+        totalWordsCnt = int(0)
+        uniqueWordsCnt = int(0)
+        totalCreepingCnt = int(0)
+        maxTimes= int(0)
 
-creepingCnt = 0
+    i = 8
+    print("Record:")
+    wordList.clear()
+    # importCnt=0
+    while i <= len(records) - 2:
+        if records[i] not in wordList:
+            wordList[records[i]] = int(records[i + 1])
+            print(records[i] + " " + records[i + 1] , end=' , ')
+            # importCnt = importCnt + 1
+        else:
+            print("\nError in wordList: '"+records[i]+"'")
+        i = i + 2
+    # print("\nimportCnt = "+str(importCnt))
+    
+    
+    check(records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
+    print("file imported: totalCreepingCnt = " + str(totalCreepingCnt) + " totalWordsCnt = " + str(
+        totalWordsCnt) + " uniqueWordsCnt = " + str(uniqueWordsCnt))
+    records.clear()
+    # finish import record
+    # creepingCnt = 0
+    return wordList,realUniqueWordsCnt,0,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes
