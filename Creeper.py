@@ -74,8 +74,16 @@ def crawling(NO):
                 print(processMessage+"Saving record, please don't exit.")
                 save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt)
                 print("")
-                terminate=True
-                time.sleep(10)
+                try:
+                    configFile = open("config.txt", 'r')
+                except IOError:
+                    print("File not found: "+"config.txt")
+                    time.sleep(10)
+                    exit(-1)
+                configs=configFile.read()
+                configs=configs.split()
+                if len(configs)>1:
+                    terminate=True
 
             # fp   = open("text.html", 'w',encoding="utf-8")
             # fp.write(html)
@@ -96,11 +104,27 @@ def crawling(NO):
 
 if __name__=='__main__':
     print('Parent process %s.' % os.getpid())
-    p = Pool(processes=10)
-    for i in range(10):
-        p.apply_async(crawling,args=(i,))
+    try:
+        os.stat("config.txt")
+    except:
+        configFile = open("config.txt", 'w')
+        configFile.write(str(10))
+        configFile.close()
+    try:
+        configFile = open("config.txt", 'r')
+    except IOError:
+        print("File not found: "+"config.txt")
+        time.sleep(10)
+        exit(-1)
+
+    configs=configFile.read()
+    configs=configs.split()
+    processCnt=int(configs[0])
+    pool = Pool(processes=processCnt)
+    for i in range(processCnt):
+        pool.apply_async(crawling,args=(i,))
         # p.map(crawling(i))
     print('Waiting for all subprocesses done...')
-    p.close()
-    p.join()
+    pool.close()
+    pool.join()
     print('All subprocesses done.')
