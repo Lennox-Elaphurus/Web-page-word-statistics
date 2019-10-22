@@ -8,9 +8,10 @@ from multiprocessing import Pool
 
 
 def crawling(NO):
-    print('Child process %s.' % os.getpid())
+    processMessage="Process "+str(NO)+" : "
+    print('Child process '+str(NO)+" started.")
     recordFileName="record_"+str(NO)+".txt"
-    wordList,realUniqueWordsCnt,creepingCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(recordFileName)
+    wordList,creepingCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(recordFileName)
     terminate=False
     try:
         while terminate is False:
@@ -19,9 +20,9 @@ def crawling(NO):
             try:
                 response = requests.get('https://en.wikibooks.org/api/rest_v1/page/random/html').text
             except requests.HTTPError:
-                print("Detected an HTTP Error.")
+                print(processMessage+"Detected an HTTP Error.")
                 rest=random.randrange(30, 60)
-                print("Sleeping: "+str(rest)+" s")
+                print(processMessage+"Sleeping: "+str(rest)+" s")
                 time.sleep(rest)
                 continue
             else:
@@ -59,18 +60,18 @@ def crawling(NO):
                 elif len(content)>0 and content[0]!="-" and content[len(content)-1]!="-":
                     try:
                         print(wordList[content])
-                        print("Error in wordList.")
-                        print(str(wordList[content]) + " already exist.")
+                        print(processMessage+"Error in wordList.")
+                        print(processMessage+str(wordList[content]) + " already exist.")
                     except :
                         wordList[content]=int(1)
                     uniqueWordsCnt=uniqueWordsCnt+1
                 totalWordsCnt = totalWordsCnt + 1
             # finish counting
             creepingCnt=creepingCnt+1
-            print(str(time.strftime('%H:%M:%S', time.localtime(time.time())))+" Creeping times " + str(creepingCnt) + " : got " + str(len(contentMatch)) + " words.")
+            print(processMessage+str(time.strftime('%H:%M:%S', time.localtime(time.time())))+" Creeping times " + str(creepingCnt) + " : got " + str(len(contentMatch)) + " words.")
             if creepingCnt%10==0:
                 totalCreepingCnt=totalCreepingCnt+10
-                print("Saving record, please don't exit.")
+                print(processMessage+"Saving record, please don't exit.")
                 save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt)
                 print("")
                 terminate=True
@@ -79,14 +80,12 @@ def crawling(NO):
             # fp.write(html)
             # fp.close()
     except KeyboardInterrupt:
-        print("Detected keyboard interrupt in process "+str(NO)+" .")
-        print("Waiting, press ENTER to exit.")
+        print(processMessage+"Detected keyboard interrupt in process "+str(NO)+" .")
+        print(processMessage+"Waiting, press ENTER to exit.")
         time.sleep(10)
         exit(0)
     else:
-        print("Detected an unexpected error.")
-        time.sleep(10)
-        exit(-1)
+        print('Child process '+str(NO)+ " closed.")
     # fp   = open("text.html", 'wb')
     # fp.write(html)
     # fp.close()
@@ -99,6 +98,7 @@ if __name__=='__main__':
     p = Pool(4)
     for i in range(4):
         p.apply_async(crawling(i))
+        # p.map(crawling(i))
     print('Waiting for all subprocesses done...')
     p.close()
     p.join()

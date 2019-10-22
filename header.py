@@ -1,4 +1,5 @@
 import time
+import os
 
 
 def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
@@ -17,6 +18,10 @@ def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
         check([],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
         currentTime=str(time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(time.time())))
         backupFileName="backups/record_" +str(NO)+"_"+ currentTime + ".txt"
+        try:
+            os.stat("backups")
+        except:
+            os.makedirs("backups")
         backupFile=open(backupFileName,'w')
         recordFile = open(recordFileName, 'r')
         recordText=recordFile.read()
@@ -49,7 +54,7 @@ def check(records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTime
         time.sleep(60)
         exit(-1)
     else:
-        print("\nMax times of the first word is examined.")
+        print("Max times of the first word is examined.")
 
     if realUniqueWordsCnt == uniqueWordsCnt:
         print("Unique words record is examined.")
@@ -63,6 +68,11 @@ def check(records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTime
 
 def importRecord(recordFileName):
     # import record
+    try:
+        os.stat(recordFileName)
+    except:
+        recordFile = open(recordFileName, 'w')
+        recordFile.close()
     try:
         recordFile = open(recordFileName, 'r')
     except IOError:
@@ -102,12 +112,11 @@ def importRecord(recordFileName):
             print("\nError in wordList: '"+records[i]+"'")
         i = i + 2
     # print("\nimportCnt = "+str(importCnt))
-    
-    
+
     check(records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
     print("file imported: totalCreepingCnt = " + str(totalCreepingCnt) + " totalWordsCnt = " + str(
         totalWordsCnt) + " uniqueWordsCnt = " + str(uniqueWordsCnt))
     records.clear()
     # finish import record
     # creepingCnt = 0
-    return wordList,realUniqueWordsCnt,0,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes
+    return wordList,0,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes
