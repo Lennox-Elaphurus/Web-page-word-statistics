@@ -1,7 +1,8 @@
 import time
 
 
-def save(wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt,recordFileName):
+def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
+    recordFileName="record_"+str(NO)+".txt"
     recordFile=open(recordFileName,'w')
     maxTimes=int(sorted(wordList.values(),reverse=True)[0])
     # records=[]
@@ -15,9 +16,9 @@ def save(wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt,recordFileName):
     if totalCreepingCnt%1000==0:
         check([],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
         currentTime=str(time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(time.time())))
-        backupFileName="backups/record_" + currentTime + ".txt"
+        backupFileName="backups/record_" +str(NO)+"_"+ currentTime + ".txt"
         backupFile=open(backupFileName,'w')
-        recordFile = open("record.txt", 'r')
+        recordFile = open(recordFileName, 'r')
         recordText=recordFile.read()
         backupFile.write(recordText)
         backupFile.close()
@@ -89,13 +90,13 @@ def importRecord(recordFileName):
         maxTimes= int(0)
 
     i = 8
-    print("Record:")
+    # print("Record:")
     wordList.clear()
     # importCnt=0
     while i <= len(records) - 2:
         if records[i] not in wordList:
             wordList[records[i]] = int(records[i + 1])
-            print(records[i] + " " + records[i + 1] , end=' , ')
+            # print(records[i] + " " + records[i + 1] , end=' , ')
             # importCnt = importCnt + 1
         else:
             print("\nError in wordList: '"+records[i]+"'")
