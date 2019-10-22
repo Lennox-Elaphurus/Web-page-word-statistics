@@ -108,7 +108,7 @@ if __name__=='__main__':
         os.stat("config.txt")
     except:
         configFile = open("config.txt", 'w')
-        configFile.write(str(10)+" "+str(1)+" ")
+        configFile.write(str(10))
         configFile.close()
     try:
         configFile = open("config.txt", 'r')
@@ -119,13 +119,12 @@ if __name__=='__main__':
 
     configs=configFile.read()
     configs=configs.split()
-    isParent=bool(configs[1])
     processCnt=int(configs[0])
-    if isParent is True:
+    if len(configs)==1:
         # turn isParent to True
         try:
             configFile = open("config.txt", 'w')
-            configFile.write(str(processCnt)+" "+str(0)+" ")
+            configFile.write(str(processCnt)+" isParent ")
             configFile.close()
         except IOError:
             print("File not found: "+"config.txt")
@@ -139,3 +138,8 @@ if __name__=='__main__':
         pool.close()
         pool.join()
         print('All subprocesses done.')
+        time.sleep(10)
+    else:
+        print("In child process.")
+        print(len(configs))
+        time.sleep(10)
