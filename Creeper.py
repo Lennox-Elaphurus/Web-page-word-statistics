@@ -82,7 +82,7 @@ def crawling(NO):
                     exit(-1)
                 configs=configFile.read()
                 configs=configs.split()
-                if len(configs)>1:
+                if len(configs)>2:
                     terminate=True
 
             # fp   = open("text.html", 'w',encoding="utf-8")
@@ -108,7 +108,7 @@ if __name__=='__main__':
         os.stat("config.txt")
     except:
         configFile = open("config.txt", 'w')
-        configFile.write(str(10))
+        configFile.write(str(10)+" "+str(1)+" ")
         configFile.close()
     try:
         configFile = open("config.txt", 'r')
@@ -119,12 +119,23 @@ if __name__=='__main__':
 
     configs=configFile.read()
     configs=configs.split()
+    isParent=bool(configs[1])
     processCnt=int(configs[0])
-    pool = Pool(processes=processCnt)
-    for i in range(processCnt):
-        pool.apply_async(crawling,args=(i,))
-        # p.map(crawling(i))
-    print('Waiting for all subprocesses done...')
-    pool.close()
-    pool.join()
-    print('All subprocesses done.')
+    if isParent is True:
+        # turn isParent to True
+        try:
+            configFile = open("config.txt", 'w')
+            configFile.write(str(processCnt)+" "+str(0)+" ")
+            configFile.close()
+        except IOError:
+            print("File not found: "+"config.txt")
+            time.sleep(10)
+            exit(-1)
+        pool = Pool(processes=processCnt)
+        for i in range(processCnt):
+            pool.apply_async(crawling,args=(i,))
+            # p.map(crawling(i))
+        print('Waiting for all subprocesses done...')
+        pool.close()
+        pool.join()
+        print('All subprocesses done.')
