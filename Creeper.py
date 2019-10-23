@@ -115,12 +115,12 @@ def writeConfig(processCnt,terminate):
 
 
 #_________________________main________________________________
-
 if __name__=='__main__':
-    print('Parent process %s.' % os.getpid())
     # 当在Windows上打包时，multiprocessing.freeze_support()这行非常必要
     # 在Linux和Mac上打包用不着
     multiprocessing.freeze_support() #只要在你的程序的入口中加上这行代码加上就可以了
+    
+    print('Parent process %s.' % os.getpid())
     processCnt,terminate=getConfig()
 
     pool = Pool(processes=processCnt)
@@ -140,3 +140,4 @@ if __name__=='__main__':
 else:
     print("In child process.")
     time.sleep(10)
+    exit(-1)
