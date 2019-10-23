@@ -1,1 +1,1 @@
-processes= 10 terminate= False
+processes= 10 terminate= Fase
