@@ -32,7 +32,7 @@ def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
         except:
             os.makedirs("backups/record_"+str(NO))
         backupFile=open(backupFileName,'w')
-        recordFile = open(recordFileName, 'r')
+        recordFile = open("data/"+recordFileName, 'r')
         recordText=recordFile.read()
         backupFile.write(recordText)
         backupFile.close()

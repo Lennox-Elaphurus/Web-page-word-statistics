@@ -36,7 +36,7 @@ def crawling(NO):
             # r"\s(?P<content>[a-zA-Z-]+)\s"
             # r"<(^[/]*)>+?(?P<content>)<(/.*)>+?"
             # (? <= <[a-zA-Z]+ >). * (?= < /[a-zA-Z]+ >)
-            pattern0=re.compile(">+?(?P<content>[^<>=|&]+)<+?", re.DOTALL)
+            pattern0=re.compile(">+?(?P<content>[^<>=|\\\{\}\[\]&]+)<+?", re.DOTALL)
             html=str(html).replace("\n"," ")
             html = html.replace("\t", " ")
             html = html.replace("/", " ")
