@@ -5,10 +5,14 @@ import os
 def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
     recordFileName="record_"+str(NO)+".txt"
     processMessage="Process "+str(NO)+" : "
-    recordFile=open(recordFileName,'w')
+    try:
+        os.stat("data")
+    except:
+        os.makedirs("data")
+    recordFile=open("data/"+recordFileName,'w')
     maxTimes=int(sorted(wordList.values(),reverse=True)[0])
     # records=[]
-    check([],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
+    check(NO,[],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
     recordFile.write("totalCreepingCnt "+str(totalCreepingCnt)+" totalWordsCnt "+str(totalWordsCnt)+" uniqueWordsCnt "+str(uniqueWordsCnt)+" maxTimes "+str(maxTimes))
     for item in sorted(wordList.items(),key=lambda x:x[1],reverse=True):
         word=item[0]
@@ -16,13 +20,17 @@ def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
     recordFile.close()
 
     if totalCreepingCnt%1000==0:
-        check([],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
+        check(NO,[],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
         currentTime=str(time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(time.time())))
-        backupFileName="backups/record_" +str(NO)+"_"+ currentTime + ".txt"
+        backupFileName="backups/record_" +str(NO)+"/record_"+str(NO)+"_"+ currentTime + ".txt"
         try:
             os.stat("backups")
         except:
             os.makedirs("backups")
+        try:
+            os.stat("backups/record_"+str(NO))
+        except:
+            os.makedirs("backups/record_"+str(NO))
         backupFile=open(backupFileName,'w')
         recordFile = open(recordFileName, 'r')
         recordText=recordFile.read()
@@ -34,41 +42,47 @@ def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
     print(processMessage+"Record saved: "+"totalCreepingCnt = "+str(totalCreepingCnt)+" totalWordsCnt = "+str(totalWordsCnt)+" uniqueWordsCnt = "+str(uniqueWordsCnt))
 
 
-def check(records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes):
+def check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes):
     # print("\nWordList:")
     # for item in sorted(wordList.items(), key = lambda kv:(kv[1], kv[0]),reverse=True):
     #     print(str(item[0])+" "+str(item[1]),end=" , ")
     # print("")
+    processMessage="Process "+str(NO)+" : "
     realUniqueWordsCnt=int(len(wordList))
     if len(records) == 0 and uniqueWordsCnt!=0 :
         tempMax = int(sorted(wordList.values(),reverse=True)[0])
         if maxTimes != tempMax:
-            print("Error: Record is corrupted.")
-            print("MaxTimes should be " + str(tempMax) + " instead of " + str(maxTimes) + " .")
+            print(processMessage+"Error: Record is corrupted.")
+            print(processMessage+"MaxTimes should be " + str(tempMax) + " instead of " + str(maxTimes) + " .")
             time.sleep(60)
             exit(-1)
         else:
-            print("Max times of the first word is examined.")
+            print(processMessage+"Max times of the first word is examined.")
     elif len(records)>0 and maxTimes != int(records[9]):
-        print("First time import error: Record is corrupted.")
-        print("MaxTimes should be " + str(maxTimes) + " instead of " + str(records[9]) + " .")
+        print(processMessage+"First time import error: Record is corrupted.")
+        print(processMessage+"MaxTimes should be " + str(maxTimes) + " instead of " + str(records[9]) + " .")
         time.sleep(60)
         exit(-1)
     else:
-        print("Max times of the first word is examined.")
+        print(processMessage+"Max times of the first word is examined.")
 
     if realUniqueWordsCnt == uniqueWordsCnt:
-        print("Unique words record is examined.")
+        print(processMessage+"Unique words record is examined.")
     else:
-        print("Error: Record is corrupted.")
+        print(processMessage+"Error: Record is corrupted.")
         print(
-            "Number of unique words should be " + str(uniqueWordsCnt) + " instead of " + str(realUniqueWordsCnt) + " .")
+            processMessage+"Number of unique words should be " + str(uniqueWordsCnt) + " instead of " + str(realUniqueWordsCnt) + " .")
         time.sleep(60)
         exit(-1)
 
 
-def importRecord(recordFileName):
+def importRecord(NO,recordFileName):
     # import record
+    processMessage="Process "+str(NO)+" : "
+    try:
+        os.stat("data")
+    except:
+        os.makedirs("data")
     try:
         os.stat(recordFileName)
     except:
@@ -77,7 +91,7 @@ def importRecord(recordFileName):
     try:
         recordFile = open(recordFileName, 'r')
     except IOError:
-        print("File not found: "+recordFileName)
+        print(processMessage+"File not found: "+recordFileName)
         time.sleep(10)
         exit(-1)
     wordList = {}
@@ -88,7 +102,7 @@ def importRecord(recordFileName):
     realUniqueWordsCnt = int((len(records) - 8) / 2)
     if realUniqueWordsCnt == -4:
         realUniqueWordsCnt = 0
-    print("Importing unique words: " + str(realUniqueWordsCnt))
+    print(processMessage+"Importing unique words: " + str(realUniqueWordsCnt))
     if len(records) >= 8:
         totalCreepingCnt = int(records[1])
         totalWordsCnt = int(records[3])
@@ -110,12 +124,12 @@ def importRecord(recordFileName):
             # print(records[i] + " " + records[i + 1] , end=' , ')
             # importCnt = importCnt + 1
         else:
-            print("\nError in wordList: '"+records[i]+"'")
+            print(processMessage+" Error in wordList: '"+records[i]+"'")
         i = i + 2
     # print("\nimportCnt = "+str(importCnt))
 
-    check(records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
-    print("file imported: totalCreepingCnt = " + str(totalCreepingCnt) + " totalWordsCnt = " + str(
+    check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
+    print(processMessage+"File imported: totalCreepingCnt = " + str(totalCreepingCnt) + " totalWordsCnt = " + str(
         totalWordsCnt) + " uniqueWordsCnt = " + str(uniqueWordsCnt))
     records.clear()
     # finish import record

@@ -5,16 +5,17 @@ import random
 import os
 from header import save,importRecord
 from multiprocessing import Pool
+import multiprocessing
 
 
 def crawling(NO):
     processMessage="Process "+str(NO)+" : "
     print('Child process '+str(NO)+" started.")
-    recordFileName="record_"+str(NO)+".txt"
-    wordList,creepingCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(recordFileName)
-    terminate=False
+    recordFilePath="data/record_"+str(NO)+".txt"
+    wordList,creepingCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(NO,recordFilePath)
+    terminate="False"
     try:
-        while terminate is False:
+        while terminate == "False":
             # https://en.wikibooks.org/wiki/Special:Random
             # https://en.wikibooks.org/api/rest_v1/page/random/summary
             try:
@@ -74,16 +75,7 @@ def crawling(NO):
                 print(processMessage+"Saving record, please don't exit.")
                 save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt)
                 print("")
-                try:
-                    configFile = open("config.txt", 'r')
-                except IOError:
-                    print("File not found: "+"config.txt")
-                    time.sleep(10)
-                    exit(-1)
-                configs=configFile.read()
-                configs=configs.split()
-                if len(configs)>2:
-                    terminate=True
+                processCnt,terminate=getConfig()
 
             # fp   = open("text.html", 'w',encoding="utf-8")
             # fp.write(html)
@@ -100,46 +92,51 @@ def crawling(NO):
     # fp.close()
 
 
-#_________________________main________________________________
-
-if __name__=='__main__':
-    print('Parent process %s.' % os.getpid())
+def getConfig():
     try:
         os.stat("config.txt")
     except:
         configFile = open("config.txt", 'w')
-        configFile.write(str(10))
+        configFile.write("processes= "+str(10)+" terminate= False")
         configFile.close()
-    try:
-        configFile = open("config.txt", 'r')
-    except IOError:
-        print("File not found: "+"config.txt")
-        time.sleep(10)
-        exit(-1)
 
+    configFile = open("config.txt", 'r')
     configs=configFile.read()
     configs=configs.split()
-    processCnt=int(configs[0])
-    if len(configs)==1:
-        # turn isParent to True
-        try:
-            configFile = open("config.txt", 'w')
-            configFile.write(str(processCnt)+" isParent ")
-            configFile.close()
-        except IOError:
-            print("File not found: "+"config.txt")
-            time.sleep(10)
-            exit(-1)
-        pool = Pool(processes=processCnt)
-        for i in range(processCnt):
-            pool.apply_async(crawling,args=(i,))
-            # p.map(crawling(i))
-        print('Waiting for all subprocesses done...')
-        pool.close()
-        pool.join()
-        print('All subprocesses done.')
-        time.sleep(10)
-    else:
-        print("In child process.")
-        print(len(configs))
-        time.sleep(10)
+    processCnt=int(configs[1])
+    terminate=configs[3]
+    return processCnt,terminate
+
+
+def writeConfig(processCnt,terminate):
+    configFile = open("config.txt", 'w')
+    configFile.write("processes= "+str(processCnt)+" terminate= "+terminate)
+    configFile.close()
+
+
+#_________________________main________________________________
+
+if __name__=='__main__':
+    print('Parent process %s.' % os.getpid())
+    # 当在Windows上打包时，multiprocessing.freeze_support()这行非常必要
+    # 在Linux和Mac上打包用不着
+    multiprocessing.freeze_support() #只要在你的程序的入口中加上这行代码加上就可以了
+    processCnt,terminate=getConfig()
+
+    pool = Pool(processes=processCnt)
+    for i in range(processCnt):
+        pool.apply_async(crawling,args=(i,))
+
+    print('Waiting for all subprocesses done...')
+    pool.close()
+    pool.join()
+    print('All subprocesses done.')
+
+    processCnt,terminate=getConfig()
+    terminate="False"
+    writeConfig(processCnt,terminate)
+    print("You can exit the program now.")
+    time.sleep(5)
+else:
+    print("In child process.")
+    time.sleep(10)
