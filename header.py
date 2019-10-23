@@ -4,7 +4,7 @@ import os
 
 def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
     recordFileName="record_"+str(NO)+".txt"
-    processMessage="Process "+str(NO)+" : "
+    processMessage="Process "+str(NO)+" :\t"
     try:
         os.stat("data")
     except:
@@ -47,7 +47,7 @@ def check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxT
     # for item in sorted(wordList.items(), key = lambda kv:(kv[1], kv[0]),reverse=True):
     #     print(str(item[0])+" "+str(item[1]),end=" , ")
     # print("")
-    processMessage="Process "+str(NO)+" : "
+    processMessage="Process "+str(NO)+" :\t"
     realUniqueWordsCnt=int(len(wordList))
     if len(records) == 0 and uniqueWordsCnt!=0 :
         tempMax = int(sorted(wordList.values(),reverse=True)[0])
@@ -78,7 +78,7 @@ def check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxT
 
 def importRecord(NO,recordFileName):
     # import record
-    processMessage="Process "+str(NO)+" : "
+    processMessage="Process "+str(NO)+" :\t"
     try:
         os.stat("data")
     except:

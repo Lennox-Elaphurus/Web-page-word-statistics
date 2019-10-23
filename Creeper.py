@@ -9,7 +9,7 @@ import multiprocessing
 
 
 def crawling(NO):
-    processMessage="Process "+str(NO)+" : "
+    processMessage="Process "+str(NO)+" :\t"
     print('Child process '+str(NO)+" started.")
     recordFilePath="data/record_"+str(NO)+".txt"
     wordList,creepingCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(NO,recordFilePath)
@@ -122,7 +122,7 @@ if __name__=='__main__':
     # 当在Windows上打包时，multiprocessing.freeze_support()这行非常必要
     # 在Linux和Mac上打包用不着
     multiprocessing.freeze_support() #只要在你的程序的入口中加上这行代码加上就可以了
-    
+
     print('Parent process %s.' % os.getpid())
     processCnt,terminate=getConfig()
 
