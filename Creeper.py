@@ -30,35 +30,40 @@ def crawling(NO):
             # else:
             #     html = response
                 # print(html)
-            # # getText
-            # #\s \s
-            # # [a-zA-Z\s,.:]
-            # # <p>+?(?P<content>.*)</p>+?
-            # # r"\s(?P<content>[a-zA-Z-]+)\s"
-            # # r"<(^[/]*)>+?(?P<content>)<(/.*)>+?"
-            # # (? <= <[a-zA-Z]+ >). * (?= < /[a-zA-Z]+ >)
+            # getText
+
+            #\s \s
+            # [a-zA-Z\s,.:]
+            # <p>+?(?P<content>.*)</p>+?
+            # r"\s(?P<content>[a-zA-Z-]+)\s"
+            # r"<(^[/]*)>+?(?P<content>)<(/.*)>+?"
+            # (? <= <[a-zA-Z]+ >). * (?= < /[a-zA-Z]+ >)
             # pattern0=re.compile(">+?(?P<content>[^<>=|&]+)<+?", re.DOTALL)
             # html=str(html).replace("\n"," ")
             # html = html.replace("\t", " ")
             # html = html.replace("/", " ")
             # html = html.replace("\"", " ")
             # preMatches=re.findall(pattern0, str(html))
-            # # print(preMatches)
-            # # r"[> '(]+(?P<content>[a-zA-Z-']+)[ ',.?!)<]+"
-            # pattern1 = re.compile(r"[ ]+(?P<content>[a-zA-Z-']+)[ ,.?!:]+", re.DOTALL)
-            # contentMatch=[]
-            # for preMatch in preMatches:
-            #     contentMatch.extend(re.findall(pattern1, str(" "+preMatch+" ")))
-            #     # print(re.findall(pattern1, " "+str(preMatch)+" "),end=" ")
-            # # print("")
-            # # print(contentMatch)
-            # # finish getting words
+
             my_soup = BeautifulSoup(response, 'html.parser')
-            contentMatch=my_soup.get_text()
-            symbols = "!@#$%^&*()_+={[}]|\;:\"?/.,"
-            for i in range(0, len(symbols)):
-                contentMatch = contentMatch.replace(symbols[i], ' ')
-            contentMatch=contentMatch.split()
+            preMatches=my_soup.get_text()
+            print(preMatches)
+            # r"[> '(]+(?P<content>[a-zA-Z-']+)[ ',.?!)<]+"
+            pattern1 = re.compile(r"[ \"(]+(?P<content>[a-zA-Z-']+)[\") ,.?!:]+", re.DOTALL)
+            contentMatch=[]
+            for preMatch in preMatches:
+                contentMatch.extend(re.findall(pattern1, str(" "+preMatch+" ")))
+                # print(re.findall(pattern1, " "+str(preMatch)+" "),end=" ")
+            # print("")
+            # print(contentMatch)
+
+            # symbols = "!@#$%^&*()_+={[}]|\;:\"?/.,"
+            # for i in range(0, len(symbols)):
+            #     contentMatch = contentMatch.replace(symbols[i], ' ')
+            # contentMatch=contentMatch.split()
+
+            # finish getting words
+
             for content in contentMatch:
                 content=content.strip("'")
                 content = content.strip("-")
@@ -124,30 +129,30 @@ def writeConfig(processCnt,terminate):
 
 
 #_________________________main________________________________
-# if __name__=='__main__':
-#     # 当在Windows上打包时，multiprocessing.freeze_support()这行非常必要
-#     # 在Linux和Mac上打包用不着
-#     multiprocessing.freeze_support() #只要在你的程序的入口中加上这行代码加上就可以了
-#
-#     print('Parent process %s.' % os.getpid())
-#     processCnt,terminate=getConfig()
-#
-#     pool = Pool(processes=processCnt)
-#     for i in range(processCnt):
-#         pool.apply_async(crawling,args=(i,))
-#
-#     print('Waiting for all subprocesses done...')
-#     pool.close()
-#     pool.join()
-#     print('All subprocesses done.')
-#
-#     processCnt,terminate=getConfig()
-#     terminate="False"
-#     writeConfig(processCnt,terminate)
-#     print("You can exit the program now.")
-#     time.sleep(5)
-# else:
-#     print("In child process.")
-#     time.sleep(10)
-#     exit(-1)
-crawling(0)
+if __name__=='__main__':
+    # 当在Windows上打包时，multiprocessing.freeze_support()这行非常必要
+    # 在Linux和Mac上打包用不着
+    multiprocessing.freeze_support() #只要在你的程序的入口中加上这行代码加上就可以了
+
+    print('Parent process %s.' % os.getpid())
+    processCnt,terminate=getConfig()
+
+    pool = Pool(processes=processCnt)
+    for i in range(processCnt):
+        pool.apply_async(crawling,args=(i,))
+
+    print('Waiting for all subprocesses done...')
+    pool.close()
+    pool.join()
+    print('All subprocesses done.')
+
+    processCnt,terminate=getConfig()
+    terminate="False"
+    writeConfig(processCnt,terminate)
+    print("You can exit the program now.")
+    time.sleep(5)
+else:
+    print("In child process.")
+    time.sleep(10)
+    exit(-1)
+# crawling(0)
