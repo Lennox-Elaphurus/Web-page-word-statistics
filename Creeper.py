@@ -104,6 +104,9 @@ def getConfig():
     configs=configFile.read()
     configs=configs.split()
     processCnt=int(configs[1])
+    if processCnt>200:
+        processCnt=200
+        print("The maximum number of processes is 200.")
     terminate=configs[3]
     return processCnt,terminate
 
