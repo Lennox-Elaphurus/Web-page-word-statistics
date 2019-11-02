@@ -119,9 +119,8 @@ def writeConfig(processCnt,terminate):
 
 #_________________________main________________________________
 if __name__=='__main__':
-    # 当在Windows上打包时，multiprocessing.freeze_support()这行非常必要
-    # 在Linux和Mac上打包用不着
-    multiprocessing.freeze_support() #只要在你的程序的入口中加上这行代码加上就可以了
+    # very necessary when your are in windows
+    multiprocessing.freeze_support()
 
     print('Parent process %s.' % os.getpid())
     processCnt,terminate=getConfig()
