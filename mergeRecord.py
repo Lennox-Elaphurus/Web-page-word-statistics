@@ -19,7 +19,7 @@ print(fileList)
 
 wordList,importCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(-1,"mergedData.txt")
 for fileName in fileList:
-    print("Merging file "+str(importCnt)+"\t"+fileName)
+    print("Merging file "+str(importCnt)+":\t"+fileName)
     realPath = folderName+'\\'+fileName
     wordListTmp,creepingCnt,totalCreepingCntTmp,totalWordsCntTmp,uniqueWordsCntTmp,maxTimesTmp=importRecord(-1,realPath)
     importCnt+=1
