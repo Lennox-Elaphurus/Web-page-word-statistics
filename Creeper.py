@@ -12,7 +12,12 @@ def crawling(NO):
     processMessage="Process "+str(NO)+" :\t"
     print('Child process '+str(NO)+" started.")
     recordFilePath="data/record_"+str(NO)+".txt"
-    wordList,creepingCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(NO,recordFilePath)
+
+    wordList,creepingCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes,isValid=importRecord(NO,recordFilePath)
+    if isValid is False:
+        time.sleep(30)
+        exit(-1)
+
     terminate="False"
     try:
         while terminate == "False":

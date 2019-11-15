@@ -17,11 +17,20 @@ for fileName in preFileList:
         fileList.append(fileName)
 print(fileList)
 
-wordList,importCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(-1,"mergedData.txt")
+wordList,importCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes,isValid=importRecord(-1,"mergedData.txt")
+if isValid is False:
+    time.sleep(30)
+    exit(-1)
+
 for fileName in fileList:
     print("Merging file "+str(importCnt)+":\t"+fileName)
     realPath = folderName+'\\'+fileName
-    wordListTmp,creepingCnt,totalCreepingCntTmp,totalWordsCntTmp,uniqueWordsCntTmp,maxTimesTmp=importRecord(-1,realPath)
+
+    wordListTmp,creepingCnt,totalCreepingCntTmp,totalWordsCntTmp,uniqueWordsCntTmp,maxTimesTmp,isValidTmp=importRecord(-1,realPath)
+    if isValidTmp is False:
+        time.sleep(30)
+        exit(-1)
+
     importCnt+=1
     totalCreepingCnt+=totalCreepingCntTmp
     totalWordsCnt+=totalWordsCntTmp

@@ -60,15 +60,13 @@ def check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxT
         if maxTimes != tempMax:
             print(processMessage+"Error: Record is corrupted.")
             print(processMessage+"MaxTimes should be " + str(tempMax) + " instead of " + str(maxTimes) + " .")
-            time.sleep(60)
-            exit(-1)
+            return False
         else:
             print(processMessage+"Max times of the first word is examined.")
     elif len(records)>0 and maxTimes != int(records[9]):
         print(processMessage+"First time import error: Record is corrupted.")
         print(processMessage+"MaxTimes should be " + str(maxTimes) + " instead of " + str(records[9]) + " .")
-        time.sleep(60)
-        exit(-1)
+        return False
     else:
         print(processMessage+"Max times of the first word is examined.")
 
@@ -78,8 +76,8 @@ def check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxT
         print(processMessage+"Error: Record is corrupted.")
         print(
             processMessage+"Number of unique words should be " + str(uniqueWordsCnt) + " instead of " + str(realUniqueWordsCnt) + " .")
-        time.sleep(60)
-        exit(-1)
+        return False
+    return True
 
 
 def importRecord(NO,recordFileName):
@@ -136,10 +134,29 @@ def importRecord(NO,recordFileName):
         i = i + 2
     # print("\nimportCnt = "+str(importCnt))
 
-    check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
-    print(processMessage+"File imported: totalCreepingCnt = " + str(totalCreepingCnt) + " totalWordsCnt = " + str(
-        totalWordsCnt) + " uniqueWordsCnt = " + str(uniqueWordsCnt))
-    records.clear()
-    # finish import record
-    # creepingCnt = 0
-    return wordList,0,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes
+    isValid=check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
+    if isValid is True:
+        print(processMessage+"File imported: totalCreepingCnt = " + str(totalCreepingCnt) + " totalWordsCnt = " + str(
+            totalWordsCnt) + " uniqueWordsCnt = " + str(uniqueWordsCnt))
+        records.clear()
+        # finish import record
+        # creepingCnt = 0
+        return wordList,0,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes,True
+    else:
+        return [],0,-1,-1,-1,-1,False
+
+def mending(recordFileName):
+    print("Mending "+recordFileName)
+    pureFileName=os.path.splitext(recordFileName)[0]
+    fullPath="/backups/"+pureFileName+"/"
+    try:
+        preFileList = os.listdir(fullPath)
+    except FileNotFoundError:
+        print("Folder "+fullPath+" not found.")
+        time.sleep(30)
+        exit(-1)
+
+    fileList=[]
+    for fileName in preFileList:
+        if(re.search(".*\.txt",fileName)!=None):
+            fileList.append(fileName)
