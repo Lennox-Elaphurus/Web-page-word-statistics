@@ -1,43 +1,35 @@
-import header
+from header import save,importRecord,check
 import time
+import re
+import os
 
-# import header.record
-fileNumber=input("Please the number of files to merge:")
-for i in range(int(fileNumber)):
-    fileName=input("Please input the file name(header.record1.txt) to merge:")
-    try:
-        header.recordFile=open(fileName,'r')
-    except FileNotFoundError:
-        print("File not found.")
-    else:
-        header.records=header.recordFile.read()
-        header.recordFile.close()
-    header.records=header.records.split()
-    # print(header.records)
-    realUniqueWordsCnt = int((len(header.records) - 8) / 2)
-    if realUniqueWordsCnt == -4:
-        realUniqueWordsCnt = 0
-    print("Importing unique words: " + str(realUniqueWordsCnt))
-    if len(header.records) >= 6:
-        header.totalCreepingCnt = header.totalCreepingCnt +int(header.records[1])
-        header.totalWordsCnt = header.totalWordsCnt+int(header.records[3])
+preFileList=[]
+folderName=input("Please input the folder name(/data) to merge:")
+try:
+    preFileList = os.listdir(folderName)
+except FileNotFoundError:
+    print("Folder not found.")
+    exit(-1)
 
-    if realUniqueWordsCnt == header.uniqueWordsCnt:
-        print("Unique words header.records are examined.")
-    else:
-        print("Error: Unique words header.records is corrupted.")
-        print("Number of unique words should be " + str(header.uniqueWordsCnt) + " instead of " + str(realUniqueWordsCnt) + " .")
-        time.sleep(60)
-        exit(-1)
+fileList=[]
+for fileName in preFileList:
+    if(re.search(".*\.txt",fileName)!=None):
+        fileList.append(fileName)
+print(fileList)
 
-    i = 6
-    while i<=len(header.records)-2 :
-        if header.records[i] in sorted(header.wordList):
-            header.wordList[header.records[i]]=header.wordList[header.records[i]]+int(header.records[i+1])
+wordList,importCnt,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes=importRecord(-1,"mergedData.txt")
+for fileName in fileList:
+    print("Merging file "+str(importCnt)+"\t"+fileName)
+    realPath = folderName+'\\'+fileName
+    wordListTmp,creepingCnt,totalCreepingCntTmp,totalWordsCntTmp,uniqueWordsCntTmp,maxTimesTmp=importRecord(-1,realPath)
+    importCnt+=1
+    totalCreepingCnt+=totalCreepingCntTmp
+    totalWordsCnt+=totalWordsCntTmp
+    for word in wordListTmp:
+        if word in wordList:
+            wordList[word]+=wordListTmp[word]
         else:
-            header.wordList[header.records[i]]=int(header.records[i+1])
-            header.uniqueWordsCnt=header.uniqueWordsCnt+1
-        i=i+2
-    print("File imported: header.totalWordsCnt = "+str(header.totalWordsCnt)+" header.uniqueWordsCnt = "+str(header.uniqueWordsCnt))
-# finish import header.record
-header.save()
+            uniqueWordsCnt+=1
+            wordList[word]=wordListTmp[word]
+
+save(-1,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt)

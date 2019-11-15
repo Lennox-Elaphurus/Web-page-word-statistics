@@ -3,13 +3,19 @@ import os
 
 
 def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
-    recordFileName="record_"+str(NO)+".txt"
     processMessage="Process "+str(NO)+" :\t"
+
+    if NO!=-1:
+        recordFileName="data/"+"record_"+str(NO)+".txt"
+    else:
+        recordFileName="mergedData.txt"
+
     try:
         os.stat("data")
     except:
         os.makedirs("data")
-    recordFile=open("data/"+recordFileName,'w')
+
+    recordFile=open(recordFileName,'w')
     maxTimes=int(sorted(wordList.values(),reverse=True)[0])
     # records=[]
     check(NO,[],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
@@ -19,7 +25,7 @@ def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
         recordFile.write("\n"+word+" "+str(item[1]))
     recordFile.close()
 
-    if totalCreepingCnt%1000==0:
+    if totalCreepingCnt%1000==0 and NO!=-1:
         check(NO,[],wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxTimes)
         currentTime=str(time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(time.time())))
         backupFileName="backups/record_" +str(NO)+"/record_"+str(NO)+"_"+ currentTime + ".txt"
@@ -79,10 +85,11 @@ def check(NO,records,wordList,totalCreepingCnt,totalWordsCnt,uniqueWordsCnt,maxT
 def importRecord(NO,recordFileName):
     # import record
     processMessage="Process "+str(NO)+" :\t"
-    try:
-        os.stat("data")
-    except:
-        os.makedirs("data")
+    if NO!=-1:
+        try:
+            os.stat("data")
+        except:
+            os.makedirs("data")
     try:
         os.stat(recordFileName)
     except:
