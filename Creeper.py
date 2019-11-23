@@ -129,7 +129,7 @@ if __name__=='__main__':
 
     print('Parent process %s.' % os.getpid())
     processCnt,terminate=getConfig()
-    maintain()
+    # maintain()
 
     pool = Pool(processes=processCnt)
     for i in range(processCnt):
