@@ -3,6 +3,7 @@ import time
 import re
 import os
 
+maintain()
 preFileList=[]
 folderName=input("Please input the folder name(/data) to merge:")
 try:

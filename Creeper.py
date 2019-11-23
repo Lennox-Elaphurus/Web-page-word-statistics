@@ -3,7 +3,7 @@ import requests
 import time
 import random
 import os
-from header import save,importRecord
+from header import save,importRecord,maintain
 from multiprocessing import Pool
 import multiprocessing
 
@@ -129,6 +129,7 @@ if __name__=='__main__':
 
     print('Parent process %s.' % os.getpid())
     processCnt,terminate=getConfig()
+    maintain()
 
     pool = Pool(processes=processCnt)
     for i in range(processCnt):
