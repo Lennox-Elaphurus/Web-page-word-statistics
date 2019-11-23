@@ -5,7 +5,8 @@ import os
 
 maintain()
 preFileList=[]
-folderName=input("Please input the folder name(/data) to merge:")
+# folderName=input("Please input the folder name(/data) to merge:")
+folderName="data"
 try:
     preFileList = os.listdir(folderName)
 except FileNotFoundError:
