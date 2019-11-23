@@ -170,6 +170,9 @@ def maintain():
         if isValidTmp is False:
             mending(fileName)
 
+    print("Finish maintain.")
+    time.sleep(5)
+
 
 def mending(recordFileName):
     print("Mending "+recordFileName)
