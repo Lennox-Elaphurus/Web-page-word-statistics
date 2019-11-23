@@ -151,7 +151,7 @@ def importRecord(NO,recordFileName):
 def maintain():
     preFileList=[]
     try:
-        preFileList = os.listdir("/data")
+        preFileList = os.listdir("data")
     except FileNotFoundError:
         print("Folder data not found.")
         exit(-1)
@@ -174,7 +174,7 @@ def maintain():
 def mending(recordFileName):
     print("Mending "+recordFileName)
     pureFileName=os.path.splitext(recordFileName)[0]
-    fullPath="/backups/"+pureFileName+"/"
+    fullPath="backups/"+pureFileName+"/"
     try:
         preFileList = os.listdir(fullPath)
     except FileNotFoundError:
@@ -193,7 +193,9 @@ def mending(recordFileName):
                 maxFileName=fileName
     # finish finding latest backup
 
-    copyfile(fullPath+"maxFileName.txt","data/"+pureFileName+".txt")
+    copyfile(fullPath+maxFileName,"data/"+pureFileName+".txt")
+
+    print("Mending"+pureFileName+".txt"+" succeed.")
 
 
 
