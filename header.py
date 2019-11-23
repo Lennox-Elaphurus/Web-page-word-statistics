@@ -1,5 +1,7 @@
 import time
 import os
+import re
+from shutil import copyfile
 
 
 def save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt):
@@ -145,6 +147,30 @@ def importRecord(NO,recordFileName):
     else:
         return [],0,-1,-1,-1,-1,False
 
+
+def maintain():
+    preFileList=[]
+    try:
+        preFileList = os.listdir("/data")
+    except FileNotFoundError:
+        print("Folder data not found.")
+        exit(-1)
+
+    fileList=[]
+    for fileName in preFileList:
+        if(re.search(".*\.txt",fileName)!=None):
+            fileList.append(fileName)
+    print(fileList)
+
+    for fileName in fileList:
+        try:
+            wordListTmp,creepingCnt,totalCreepingCntTmp,totalWordsCntTmp,uniqueWordsCntTmp,maxTimesTmp,isValidTmp=importRecord(-1,"data/"+fileName)
+        except:
+            mending(fileName)
+        if isValidTmp is False:
+            mending(fileName)
+
+
 def mending(recordFileName):
     print("Mending "+recordFileName)
     pureFileName=os.path.splitext(recordFileName)[0]
@@ -156,7 +182,18 @@ def mending(recordFileName):
         time.sleep(30)
         exit(-1)
 
-    fileList=[]
+    # fileList=[]
+    maxFileName=""
     for fileName in preFileList:
         if(re.search(".*\.txt",fileName)!=None):
-            fileList.append(fileName)
+            # fileList.append(fileName)
+            if maxFileName=="":
+                maxFileName=fileName
+            if maxFileName<fileName:
+                maxFileName=fileName
+    # finish finding latest backup
+
+    copyfile(fullPath+"maxFileName.txt","data/"+pureFileName+".txt")
+
+
+
