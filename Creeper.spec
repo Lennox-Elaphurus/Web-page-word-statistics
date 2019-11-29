@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['Creeper.py'],
-             pathex=['F:\\Github\\NotPrivate\\Web-page-word-statistics'],
+             pathex=['C:\\MyFiles\\Coding\\Github\\NotPivate\\Web-page-word-statistics'],
              binaries=[],
              datas=[],
              hiddenimports=[],
