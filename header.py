@@ -197,7 +197,7 @@ def mending(recordFileName):
     # finish finding latest backup
 
     copyfile(fullPath+maxFileName,"data/"+pureFileName+".txt")
-
+    # os.system("copy "+fullPath+maxFileName+" data/"+pureFileName+".txt")
     print("Mending"+pureFileName+".txt"+" succeed.")
 
 

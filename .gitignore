@@ -3,3 +3,6 @@
 mergedData.txt
 *backups
 *data
+*build
+*dist
+*__pycache__

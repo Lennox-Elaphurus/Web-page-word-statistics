@@ -76,7 +76,7 @@ def crawling(NO):
             creepingCnt=creepingCnt+1
             print(processMessage+str(time.strftime('%H:%M:%S', time.localtime(time.time())))+" Creeping times " + str(creepingCnt) + " : got " + str(len(contentMatch)) + " words.")
             if creepingCnt%100==0:
-                totalCreepingCnt=totalCreepingCnt+10
+                totalCreepingCnt=totalCreepingCnt+100
                 print(processMessage+"Saving record, please don't exit.")
                 save(NO,wordList,totalWordsCnt,uniqueWordsCnt,totalCreepingCnt)
                 print("")
