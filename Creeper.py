@@ -3,7 +3,7 @@ import requests
 import time
 import random
 import os
-from header import save,importRecord,maintain
+from header import save,importRecord,maintain,getConfig
 from multiprocessing import Pool
 import multiprocessing
 
@@ -95,25 +95,6 @@ def crawling(NO):
     # fp   = open("text.html", 'wb')
     # fp.write(html)
     # fp.close()
-
-
-def getConfig():
-    try:
-        os.stat("config.txt")
-    except:
-        configFile = open("config.txt", 'w')
-        configFile.write("processes= "+str(10)+" terminate= False")
-        configFile.close()
-
-    configFile = open("config.txt", 'r')
-    configs=configFile.read()
-    configs=configs.split()
-    processCnt=int(configs[1])
-    if processCnt>200:
-        processCnt=200
-        print("The maximum number of processes is 200.")
-    terminate=configs[3]
-    return processCnt,terminate
 
 
 def writeConfig(processCnt,terminate):

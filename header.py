@@ -200,5 +200,23 @@ def mending(recordFileName):
     # os.system("copy "+fullPath+maxFileName+" data/"+pureFileName+".txt")
     print("Mending"+pureFileName+".txt"+" succeed.")
 
+def getConfig():
+    try:
+        os.stat("config.txt")
+    except:
+        configFile = open("config.txt", 'w')
+        configFile.write("processes= "+str(10)+" terminate= False")
+        configFile.close()
+
+    configFile = open("config.txt", 'r')
+    configs=configFile.read()
+    configs=configs.split()
+    processCnt=int(configs[1])
+    if processCnt>200:
+        processCnt=200
+        print("The maximum number of processes is 200.")
+    terminate=configs[3]
+    return processCnt,terminate
+
 
 
