@@ -7,3 +7,4 @@ mergedData.txt
 *dist
 *__pycache__
 *venv
+*.spec
