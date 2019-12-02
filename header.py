@@ -218,5 +218,12 @@ def getConfig():
     terminate=configs[3]
     return processCnt,terminate
 
+def writeConfig(processCnt,terminate):
+    configFile = open("config.txt", 'w')
+    configFile.write("processes= "+str(processCnt)+" terminate= "+terminate)
+    configFile.close()
+
+
+
 
 

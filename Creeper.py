@@ -3,7 +3,7 @@ import requests
 import time
 import random
 import os
-from header import save,importRecord,maintain,getConfig
+from header import save,importRecord,maintain,getConfig,writeConfig
 from multiprocessing import Pool
 import multiprocessing
 
@@ -95,13 +95,6 @@ def crawling(NO):
     # fp   = open("text.html", 'wb')
     # fp.write(html)
     # fp.close()
-
-
-def writeConfig(processCnt,terminate):
-    configFile = open("config.txt", 'w')
-    configFile.write("processes= "+str(processCnt)+" terminate= "+terminate)
-    configFile.close()
-
 
 #_________________________main________________________________
 if __name__=='__main__':

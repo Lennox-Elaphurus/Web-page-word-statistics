@@ -2,7 +2,7 @@ import requests
 import time
 import random
 import os
-from header import getConfig
+from header import getConfig,writeConfig
 from bs4 import BeautifulSoup
 from multiprocessing import Pool
 import multiprocessing
@@ -71,6 +71,9 @@ if __name__=='__main__':
     pool.close()
     pool.join()
     print('All subprocesses done.')
+    processCnt, terminate = getConfig()
+    terminate = "False"
+    writeConfig(processCnt, terminate)
     time.sleep(5)
 else:
     print("In child process.")
