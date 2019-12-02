@@ -3,6 +3,7 @@
 mergedData.txt
 *backups
 *data
+*venv2
 *build
 *dist
 *__pycache__
