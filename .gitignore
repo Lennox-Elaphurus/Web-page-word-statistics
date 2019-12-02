@@ -8,3 +8,4 @@ mergedData.txt
 *__pycache__
 *venv
 *.spec
+*sample
