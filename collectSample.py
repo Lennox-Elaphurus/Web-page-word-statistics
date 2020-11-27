@@ -4,8 +4,7 @@ import random
 import os
 from header import getConfig,writeConfig
 from bs4 import BeautifulSoup
-from multiprocessing import Pool
-import multiprocessing
+from multiprocessing import Pool,freeze_support
 
 def crawlingSample(NO):
     processMessage="Process "+str(NO)+" :\t"
@@ -20,7 +19,7 @@ def crawlingSample(NO):
         text=""
         while terminate == "False":
             cntA+=1
-            print(processMessage+"Creeping "+cntA)
+            print(processMessage+"Creeping "+str(cntA))
             # https://en.wikibooks.org/wiki/Special:Random
             # https://en.wikibooks.org/api/rest_v1/page/random/summary
             try:
@@ -55,29 +54,30 @@ def crawlingSample(NO):
 
 
 # _________________________main________________________________
-if __name__=='__main__':
-    # very necessary when your are in windows
-    multiprocessing.freeze_support()
 
-    print('Parent process %s.' % os.getpid())
-    processCnt,terminate=getConfig()
-    # maintain()
-
-    pool = Pool(processes=processCnt)
-    for i in range(processCnt):
-        pool.apply_async(crawlingSample,args=(i,))
-
-    print('Waiting for all subprocesses done...')
-    pool.close()
-    pool.join()
-    print('All subprocesses done.')
-    processCnt, terminate = getConfig()
-    terminate = "False"
-    writeConfig(processCnt, terminate)
-    time.sleep(5)
-else:
-    print("In child process.")
-    time.sleep(10)
-    exit(-1)
-
-# crawlingSample(-1)
+# if __name__=='__main__':
+#     # very necessary when your are in windows
+#     freeze_support()
+#
+#     print('Parent process %s.' % os.getpid())
+#     processCnt,terminate=getConfig()
+#     # maintain()
+#
+#     pool = Pool(processes=processCnt)
+#     for i in range(processCnt):
+#         pool.apply_async(crawlingSample,args=(i,))
+#
+#     print('Waiting for all subprocesses done...')
+#     pool.close()
+#     pool.join()
+#     print('All subprocesses done.')
+#     processCnt, terminate = getConfig()
+#     terminate = "False"
+#     writeConfig(processCnt, terminate)
+#     time.sleep(5)
+# else:
+#     print("In child process.")
+#     time.sleep(10)
+#     exit(-1)
+#
+crawlingSample(-1)
